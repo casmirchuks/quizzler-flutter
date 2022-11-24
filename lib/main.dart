@@ -10,7 +10,7 @@ class Quizzler extends StatelessWidget {
         backgroundColor: Colors.grey.shade900,
         body: SafeArea(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
             child: QuizPage(),
           ),
         ),
@@ -20,11 +20,20 @@ class Quizzler extends StatelessWidget {
 }
 
 class QuizPage extends StatefulWidget {
+  final int winsScore = 0;
+
   @override
   _QuizPageState createState() => _QuizPageState();
 }
 
 class _QuizPageState extends State<QuizPage> {
+  int index = 0;
+  List<Ink> scoreBoard = [];
+  List<String> questions = [
+    'You can lead a cow down stairs but not up stairs.',
+    'Approximately one quarter of human bones are in the feet.',
+    'A slug\'s blood is green.',
+  ];
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -32,71 +41,115 @@ class _QuizPageState extends State<QuizPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Expanded(
-          flex: 5,
-          child: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Center(
-              child: Text(
-                'This is where the question text will go.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 25.0,
-                  color: Colors.white,
+          // flex: 3,
+          child: Ink(
+            decoration: const ShapeDecoration(
+              color: Colors.white,
+              shape: Border(),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Center(
+                child: Text(
+                  questions[index],
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
           ),
         ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(15.0),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                textStyle: TextStyle(
-                    // color: Colors.green,
-                    // textColor: Colors.white,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(15.0),
+                child: Ink(
+                  decoration: const ShapeDecoration(
+                    color: Colors.green,
+                    shape: Border(),
+                  ),
+                  child: TextButton(
+                    child: Text(
+                      'True',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.white,
+                      ),
                     ),
-              ),
-              child: Text(
-                'True',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
+                    onPressed: () {
+                      setState(() {
+                        scoreBoard.add(
+                          Ink(
+                            decoration: const ShapeDecoration(
+                              color: Colors.green,
+                              shape: Border(),
+                            ),
+                            child: IconButton(
+                              icon: const Icon(Icons.check),
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                        index++;
+                        print("Question number: $index" );
+                      });
+                      //The user picked false.
+                    },
+                  ),
                 ),
               ),
-              onPressed: () {
-                //The user picked true.
-              },
             ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(15.0),
-            child: TextButton(
-              // color: Colors.red,
-              child: Text(
-                'False',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.white,
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(15.0),
+                child: Ink(
+                  decoration: const ShapeDecoration(
+                    color: Colors.red,
+                    shape: Border(),
+                  ),
+                  child: TextButton(
+                    child: Text(
+                      'False',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        scoreBoard.add(
+                          Ink(
+                            decoration: const ShapeDecoration(
+                              color: Colors.red,
+                              shape: Border(),
+                            ),
+                            child: IconButton(
+                              icon: const Icon(Icons.close),
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                        index--;
+                        print(index);
+                      });
+                      //The user picked false.
+                    },
+                  ),
                 ),
               ),
-              onPressed: () {
-                //The user picked false.
-              },
             ),
-          ),
+          ],
         ),
-
+        // SizedBox(height: 10,),
+        Row(children: scoreBoard)
         //TODO: Add a Row here as your score keeper
       ],
     );
   }
 }
 
-/*
-question1: 'You can lead a cow down stairs but not up stairs.', false,
-question2: 'Approximately one quarter of human bones are in the feet.', true,
-question3: 'A slug\'s blood is green.', true,
-*/
